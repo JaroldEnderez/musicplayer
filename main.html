@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+</head>
+<body>
+    <link rel="stylesheet" href="style.css">
+ 
+    <table>
+        <tr id="Playlist">
+            <td class="music-border" id="Music1.mp3">Music 1</td>
+            <td class="music-border" id="augh sound.mp3">Music 2</td>
+            <td class="music-border" id="Music2.mp3">Music 3</td>
+        </tr>
+    </table>
+
+    <button onclick="prev()">Prev</button>
+    <button onclick="stop()"><i class="fa fa-stop-circle"></i></i></button>
+    <button onclick="playMusic(this)"  value=0 id="pause_and_play"><i class="fa fa-play"></i></button>
+    <button onclick="repeatAll(this)" id="repeatStatus">Repeat All</button>
+    <button> <i class="fa-solid fa-shuffle"></i></button>
+    <button onclick="next()" >Next</button>
+    
+    <script src="index.js">
+        
+    </script>
+</body>
+</html>  
