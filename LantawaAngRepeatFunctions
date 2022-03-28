@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://kit.fontawesome.com/8bda2447ec.js" crossorigin="anonymous"></script>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CSC 104 (Programming 2) and CSC 105 (Data Structures and Algorithm)</title>
+
+	<style type="text/css">
+		.bordered{
+			border: solid;
+        }
+        .callout{
+            padding: 2px;
+            background-color: #ccc;
+            color: black;
+            top: 30px;
+            left: 20px;
+            max-width: 80px;
+            max-height:20px;
+            font-size: 8px;
+            visibility: hidden;
+        }
+	</style>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script type="text/javascript">
+		var audio = new Audio('https://storage.googleapis.com/synchedin-storage/public/tracks/GX3HH2140518/GX3HH2140518.mp3');
+	</script>
+</head>
+
+<body>
+	<table>
+		<tr id='Playlist'>
+			<td class = 'bordered' id='https://storage.googleapis.com/synchedin-storage/public/tracks/GX3HH2140518/GX3HH2140518.mp3'>Music 1</td>
+			<td class = 'bordered' id='https://storage.googleapis.com/synchedin-storage/public/tracks/GBSMU5123799/GladToSeeYou.mp3'>Music 2</td>
+			<td class = 'bordered' id='https://storage.googleapis.com/synchedin-storage/public/tracks/GBSMU9404224/GBSMU9404224.mp3'>Music 3</td>
+            <td class = 'bordered' id="https://www.naijafinix.com.ng/wp-content/uploads/2021/02/George-Michael-Careless-Whisper-via-Naijafinix.com_.mp3">Music 4</a></td>
+            <td class = "bordered" id="https://opradre.com/wp-content/uploads/2021/05/Harry-Styles-Adore-You_OpraDre.com_.mp3">Music 5</td>
+        </tr> 
+		<tr>
+			<td colspan="3">
+                <button onclick="repeatOne(this)" id="repButton"><i class="fa fa-repeat"></i></button>
+				<button onclick="prev()"><i class="fa fa-step-backward"></i></button>
+                <button onclick="stop()"><i class="fa fa-stop"></i></button>
+				<button onclick="playAudio(this)" id='ppBtn' value=0><i class="fa fa-play"></i></button>
+				<button onclick="next()"><i class="fa fa-step-forward"></i></button>
+                <button onclick="shuffle(this)" id='shuffleBtn' value="0"><i class="fa-solid fa-shuffle"></i></button>
+			</td>
+		</tr>
+	</table>
+    <div class="callout">
+        <h3>Music is repeating</h3>    
+    </div>
+</body>
+
+<script>
+	var accessPointer = Playlist.firstElementChild;
+	emphasizeSelectedNode();
+    var playedSongs = []; 
+    var index = 0;
+    var randomPusher;
+
+	function playAudio(ppBtn){
+		ppBtn.innerHTML = "<i class='fa fa-pause'></i>";
+		ppBtn.setAttribute('onclick','pauseAudio(this)');
+		audio.play();
+        audio.onended =function(){
+            ppBtn.innerHTML = "<i class='fa fa-pause'></i>";
+		    ppBtn.setAttribute('onclick','pauseAudio(this)');
+        }
+		ppBtn.value = 1;
+	}
+
+	function pauseAudio(ppBtn){
+		ppBtn.innerHTML = "<i class='fa fa-play'></i>";
+		ppBtn.setAttribute('onclick','playAudio(this)');
+		audio.pause();
+		ppBtn.value = 0;
+    }
+
+    
+    function stop(){
+        pauseAudio(ppBtn);
+        if (ppBtn.value == 1) {
+            audio.pause();
+    } 
+    audio.currentTime = 0;  
+    } 
+
+	function emphasizeSelectedNode(){
+		accessPointer.setAttribute('style','background-color: #66ff33');
+	}
+
+	function next(){
+		audio.pause();
+		accessPointer.setAttribute('style','background-color: none');//remove the attribute of the previous
+		accessPointer = accessPointer.nextElementSibling;//move forward to the next element
+		if(accessPointer==null){
+			accessPointer = Playlist.firstElementChild;
+		}
+		emphasizeSelectedNode(accessPointer);
+		audio = new Audio(accessPointer.id);
+
+		if(ppBtn.value==1){
+			audio.play();
+		}
+		else{
+			audio.pause();
+		}
+	}
+	function prev(){
+		audio.pause();
+		accessPointer.setAttribute('style','background-color: none');
+		accessPointer = accessPointer.previousElementSibling;
+		if(accessPointer==null){
+			accessPointer = Playlist.lastElementChild;
+		}
+		emphasizeSelectedNode(accessPointer);
+		audio = new Audio(accessPointer.id);
+
+		if(ppBtn.value==1){
+			audio.play();
+		}
+		else{
+			audio.pause();
+		}
+	}
+
+    function repeatNone(repButton){
+        document.getElementById("repButton").style.backgroundColor = "#dcd8e6";
+        repButton.innerHTML = '<i class="fa fa-repeat"></i>';
+        repButton.setAttribute('onclick','repeatOne(this)');
+    }
+
+    function repeatOne(repButton){
+        document.getElementById("repButton").style.backgroundColor = "#66ff33";
+        repButton.setAttribute('onclick','repeatPlaylist(this)');
+        audio.onended =function(){
+            if(accessPointer==null){
+			    accessPointer = Playlist.firstElementChild;
+		    }
+		    emphasizeSelectedNode(accessPointer);
+		    audio = new Audio(accessPointer.id);
+
+            audio.play();
+        };
+    }
+
+    function repeatPlaylist(repButton){
+        document.getElementById("repButton").style.backgroundColor = "#66ff33";
+        repButton.setAttribute('onclick','repeatNone(this)');
+        repButton.innerHTML = '<i class="fa-solid fa-arrows-left-right"></i>';
+        audio.onended =function(){
+            if(shuffleBtn.value==1){
+                shuffleBtn();
+                do{
+                    accessPointer.id=playedSongs[0];
+                    index++
+                }while(playedSongs.indexOf(accessPointer.id)==null);
+                    
+                if(playedSongs.length==5){
+                    alert("No more songs left");
+                    audio.pause();
+                }
+                next();
+            }
+            next();
+        };
+		
+    }
+
+    function shuffle(shuffleBtn){
+        document.getElementById("shuffleBtn").style.backgroundColor = "#66ff33";
+        shuffleBtn.value=1;
+        //repButton.setAttribute('onclick','repeatNone(this)');
+            randomPusher = Math.floor((Math.random() * 5) + 1);
+            for(var i=0; i<randomPusher; i++){
+                accessPointer.nextElementSibling;
+            }
+            return accessPointer;
+    }
+</script>
+</html>
